@@ -178,7 +178,7 @@ const NewArrivals = () => {
       {/*Scrollable Content */}
       <div
         ref={scrollRef}
-        className={`container  mx-auto overflow-x-scroll flex space-x-6 relative ${isDragging?"cursor-grabbing":"cursor-grab"}`}
+        className={`container  mx-auto overflow-x-scroll  hide-scrollbar   flex space-x-6 relative ${isDragging?"cursor-grabbing":"cursor-grab"}`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
