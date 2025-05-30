@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import razorPar from '../../assets/Razorpay_logo.png'
 
+
 const RazorpayButton = ({ amount, onSuccess, onError }) => {
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -25,8 +26,8 @@ const RazorpayButton = ({ amount, onSuccess, onError }) => {
     }
 
     const options = {
-      key: 'rzp_test_QaifHq2OuD8bfY', // Replace with your Razorpay key
-      amount: amount * 100, // Razorpay expects amount in paise (1 INR = 100 paise)
+      key: import.meta.env.VITE_RAZORPAY_ID, 
+      amount: amount * 100, 
       currency: 'INR',
       name: 'Your Company Name',
       description: 'Test Transaction',
