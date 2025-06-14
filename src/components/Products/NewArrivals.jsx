@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
@@ -9,109 +10,33 @@ const NewArrivals = () => {
   const [scrollLeft, setScrollLeft] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
-  const newArrivals = [
-    {
-      _id: "1",
-      name: "Stylish Jacket",
-      price: 120,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=1",
-          altText: "Stylish Jacket",
-        }
-      ]
-    },
-    {
-      _id: "2",
-      name: "Classic Denim",
-      price: 90,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=2",
-          altText: "Classic Denim",
-        }
-      ]
-    },
-    {
-      _id: "3",
-      name: "Summer T-Shirt",
-      price: 45,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=3",
-          altText: "Summer T-Shirt",
-        }
-      ]
-    },
-    {
-      _id: "4",
-      name: "Leather Boots",
-      price: 150,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=4",
-          altText: "Leather Boots",
-        }
-      ]
-    },
-    {
-      _id: "5",
-      name: "Wool Sweater",
-      price: 80,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=5",
-          altText: "Wool Sweater",
-        }
-      ]
-    },
-    {
-      _id: "6",
-      name: "Running Shoes",
-      price: 110,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=6",
-          altText: "Running Shoes",
-        }
-      ]
-    },
-    {
-      _id: "7",
-      name: "Hooded Coat",
-      price: 140,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=7",
-          altText: "Hooded Coat",
-        }
-      ]
-    },
-    {
-      _id: "8",
-      name: "Formal Shirt",
-      price: 70,
-      images: [
-        {
-          url: "https://picsum.photos/500/500?random=8",
-          altText: "Formal Shirt",
-        }
-      ]
-    }
-  ];
+  const [newArrivals, setNewArrivals] = useState([])
 
-  const handleMouseDown=(e)=>{
+  useEffect(()=>{
+    const fetchNewArrivals = async()=>{
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`);
+        setNewArrivals(response.data)
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+    fetchNewArrivals()
+  },[])
+
+  const handleMouseDown = (e) => {
     setIsDragging(true);
-    setStartX(e.pageX-scrollRef.current.offsetLeft)
+    setStartX(e.pageX - scrollRef.current.offsetLeft)
     setScrollLeft(scrollRef.current.scrollLeft)
   }
-  const handleMouseMove=(e)=>{
-    if(!isDragging)return;
-    const x =e.pageX-scrollRef.current.offsetLeft;
-    const walk = x-startX;
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = x - startX;
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
-  const handleMouseUpOrLeave=(e)=>{
+  const handleMouseUpOrLeave = (e) => {
     setIsDragging(false)
   };
 
@@ -138,7 +63,7 @@ const NewArrivals = () => {
         scrollLeft: container.scrollLeft,
         clientWidth: container.clientWidth,
         containerScrollWidth: container.scrollWidth,
-        offsetLeft:scrollRef.current.offsetLeft
+        offsetLeft: scrollRef.current.offsetLeft
       }
     );
 
@@ -149,9 +74,9 @@ const NewArrivals = () => {
     if (container) {
       container.addEventListener("scroll", updateScrollButtons);
       updateScrollButtons();
-      return ()=>container.removeEventListener("scroll", updateScrollButtons);
+      return () => container.removeEventListener("scroll", updateScrollButtons);
     }
-  },[])
+  }, [newArrivals])
   return (
     <section className='py-16 px-4 lg:px-0'>
       <div className='container mx-auto text-center mb-10 relative'>
@@ -178,12 +103,12 @@ const NewArrivals = () => {
       {/*Scrollable Content */}
       <div
         ref={scrollRef}
-        className={`container  mx-auto overflow-x-scroll  hide-scrollbar   flex space-x-6 relative ${isDragging?"cursor-grabbing":"cursor-grab"}`}
+        className={`container  mx-auto overflow-x-scroll  hide-scrollbar   flex space-x-6 relative ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
-        >
+      >
         {
           newArrivals.map((product) => (
             <div
@@ -194,7 +119,7 @@ const NewArrivals = () => {
                 alt={product.images[0].altText || product.name}
                 className='w-full h-[500px] object-cover rounded-lg'
                 draggable="false"
-                />
+              />
               <div
                 className='absolute bottom-0 left-0 right-0 bg-opacity-50 backdrop-blur-md text-white p-4 rounded-b-lg'>
                 <Link to={`/product/${product._id}`} className='block'>
