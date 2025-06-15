@@ -1,27 +1,16 @@
 import React from 'react'
 import { RiDeleteBin3Fill } from 'react-icons/ri'
+import { useDispatch } from 'react-redux'
 
-function CartContents() {
-    const cartProduct = [
-        {
-            productId:1,
-            name:"T-shirt",
-            size:"M",
-            color:"Red",
-            quantity:1,
-            price:100,
-            image:"https://picsum.photos/200?random=1"
-        },
-          {
-            productId:2,
-            name:"Jeans",
-            size:"M",
-            color:"Red",
-            quantity:1,
-            price:100,
-            image:"https://picsum.photos/200?random=2"
-        }
-    ]
+function CartContents({cart,userId,guestId}) {
+    const dispatch = useDispatch();
+
+    // Handle adding or subtracting the cart
+    const handleAddToCart = (productId,delta,quantity,size,color)=>{
+        const newQuantity = quantity + delta;
+    }
+
+
   return (
     <div>
        {

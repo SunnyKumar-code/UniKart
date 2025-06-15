@@ -85,10 +85,10 @@ const productsSlice = createSlice({
     initialState: {
         products: [],
         selectedProduct: null,// Store the details of the single Product
-        similarProduct: [],
+        similarProducts: [],
         loading: false,
         error: null,
-        filter: {
+        filters: {
             category: "",
             size: "",
             color: "",
@@ -104,10 +104,10 @@ const productsSlice = createSlice({
     },
     reducers: {
         setFilters: (state, action) => {
-            state.filters = { ...state.filter, ...action.payload };
+            state.filters = { ...state.filters, ...action.payload };
         },
         clearFilters: (state) => {
-            state.filter = {
+            state.filters = {
                 category: "",
                 size: "",
                 color: "",
@@ -170,6 +170,20 @@ const productsSlice = createSlice({
             .addCase(updateProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+            })
+
+            // fetch similar product
+            .addCase(fetchSimilarProducts.pending,(state)=>{
+                state.loading=true;
+                state.error=null
+            })
+              .addCase(fetchSimilarProducts.fulfilled,(state,action)=>{
+                state.loading=false;
+                state.similarProducts=action.payload
+            })
+              .addCase(fetchSimilarProducts.rejected,(state,action)=>{
+                state.loading=false;
+                state.error=action.error.message
             })
 
     }

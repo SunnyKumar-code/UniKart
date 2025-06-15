@@ -47,7 +47,7 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ productId, 
     }
 })
 
-// Update the quantity of an itremoveFromCartem in the cart
+// Update the quantity of an item move From Cart in the cart
 
 export const updateCartItemQuantity = createAsyncThunk("cart/updateCartItemQuantity", async ({ productId, quantity, size, color, guestId, userId }, { rejectWithValue }) => {
     try {

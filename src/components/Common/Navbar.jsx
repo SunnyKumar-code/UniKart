@@ -32,10 +32,10 @@ function Navbar() {
         </div>
         {/**center - Navigation Links */}
         <div className='hidden md:flex space-x-6'>
-          <Link to="collections/all" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Men</Link>
-          <Link to="#" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Women</Link>
-          <Link to="#" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Top Wear</Link>
-          <Link to="#" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Bottom Wear</Link>
+          <Link to="/collections/all?gender=Men" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Men</Link>
+          <Link to="/collections/all?gender=Women" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Women</Link>
+          <Link to="/collections/all?category=Top Wear" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Top Wear</Link>
+          <Link to="/collections/all?category=Bottom Wear" className='text-gray-700 hover:text-black text-sm font-medium uppercase'>Bottom Wear</Link>
         </div>
 
         {/**Right - icons */}
@@ -63,7 +63,7 @@ function Navbar() {
       <CartDrawer drawerOpen={drawerOpen} toggleCartDrawer={toggleCartDrawer} />
 
       {/**Mobile Navigation */}
-      <div className={`fixed top-0 left-0 w-3/4 sm:w-1/2 md:w-1/3 h-full bg-white shadow-lg transform transition-transform duration-300z-50 ${navDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <div className={`fixed top-0 left-0 w-3/4 z-50 sm:w-1/2 md:w-1/3 h-full bg-white shadow-lg transform transition-transform duration-300z-50 ${navDrawerOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className='flex justify-end p-4'>
           <button onClick={toggleNavDrawer}>
             <IoMdClose className='w-6 h-6 text-gray-600' />
@@ -73,25 +73,25 @@ function Navbar() {
           <h2 className='text-xl font-semibold mb-4'>Menu</h2>
           <nav className='space-y-4'>
             <Link 
-            to="#" 
+            to="/collections/all?gender=Men" 
             onClick={toggleNavDrawer} 
             className='block text-gray-600 hover:text-black uppercase'>
             Men
             </Link>
               <Link 
-            to="#" 
+            to="/collections/all?gender=Women" 
             onClick={toggleNavDrawer} 
             className='block text-gray-600 hover:text-black uppercase'>
             Women
             </Link>
               <Link 
-            to="#" 
+            to="/collections/all?category=Bottom Wear" 
             onClick={toggleNavDrawer} 
             className='block text-gray-600 hover:text-black uppercase'>
             Top Wear
             </Link>
               <Link 
-            to="#" 
+            to="/collections/all?category=Top Wear" 
             onClick={toggleNavDrawer} 
             className='block text-gray-600 hover:text-black uppercase'>
             Bottom Wear
