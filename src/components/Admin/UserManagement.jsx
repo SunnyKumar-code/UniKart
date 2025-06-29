@@ -1,21 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { addUser, deleteUser, fetchUsers, updateUser } from '../../redux/slices/adminSlice'
 
-const users = [
-    {
-        _id: 12354,
-        name: "john Doe",
-        email: "john@example.com",
-        role: "admin"
-    }
-]
+
 
 const UserManagement = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { user } = useSelector((state) => state.auth)
+    const { users, loading, error } = useSelector((state) => state.admin)
+
+    useEffect(() => {
+        if (user && user.role !== "admin") {
+            navigate("/")
+        }
+    }, [user, navigate])
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
         role: "customer",
     })
+
+    useEffect(()=>{
+        if(user && user.role==="admin"){
+           dispatch(fetchUsers()) 
+        }
+    },[dispatch,user])
 
     const handleChange = (e) => {
         setFormData({
@@ -26,7 +39,7 @@ const UserManagement = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Add your form submission logic here
-        console.log("Form submitted:", formData);
+        dispatch(addUser(formData))
 
         //Reset the form after submission
         setFormData({
@@ -37,17 +50,21 @@ const UserManagement = () => {
         })
     }
     const handleRoleChange = (userId, newRole) => {
-        console.log({ id: userId, role: newRole });
+
+        dispatch(updateUser({ id: userId, role: newRole }))
     }
-    const handleDeleteUser=(userId)=>{
-        if(window.confirm("Are you sure you want to delete the user")){
-            console.log("User Id:",userId);
-            
+    const handleDeleteUser = (userId) => {
+        if (window.confirm("Are you sure you want to delete the user")) {
+
+            dispatch(deleteUser(userId))
+
         }
     }
     return (
         <div className='max-w-7xl mx-auto p-6'>
             <h2 className='text-2xl font-bold mb-6'>User Management</h2>
+            {loading && <p>Loading...</p>}
+            {error && <p>Error:{error}</p>}
             {/* Add New User Form */}
             <div className='p-6 rounded-lg mb-6'>
                 <h3 className='text-lg font-bold mb-4'>Add New User</h3>
@@ -121,7 +138,7 @@ const UserManagement = () => {
                                 <td className='p-4'>
                                     <select
                                         value={user.role}
-                                        onChange={(e)=>handleRoleChange(user._id, e.target.value)}
+                                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
                                         className='p-2 border rounded'
                                     >
                                         <option value="customer">Customer</option>
@@ -129,7 +146,7 @@ const UserManagement = () => {
                                     </select>
                                 </td>
                                 <td className='p-4'>
-                                    <button onClick={handleDeleteUser(user._id)} className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'>
+                                    <button onClick={() => handleDeleteUser(user._id)} className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600'>
                                         Delete
                                     </button>
                                 </td>

@@ -42,7 +42,7 @@ export const updateProduct = createAsyncThunk("adminProducts/updateProduct", asy
 // Async thunk to delete a product
 export const deleteProduct = createAsyncThunk("adminProducts/deleteProduct", async (id) => {
     const response = await axios.delete(
-        `${API_URL}/api/admin/products/${id}`,
+        `${API_URL}/api/products/${id}`,
         {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("userToken")}`
@@ -59,7 +59,7 @@ const adminProductSlice = createSlice({
         loading:false,
         error:null,
     },
-    reducer:{},
+    reducers:{},
     extraReducers:(builder)=>{
         builder
         .addCase(fetchAdminProducts.pending , (state)=>{
@@ -75,7 +75,7 @@ const adminProductSlice = createSlice({
         })
 
         //Create Product
-           .addCase(createProduct.fulfilled , (state)=>{
+           .addCase(createProduct.fulfilled , (state,action)=>{
            state.products.push(action.payload)
         })
         // Update Product

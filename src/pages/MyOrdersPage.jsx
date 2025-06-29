@@ -1,49 +1,22 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { fetchUserOrders } from '../redux/slices/orderSlice'
+
 
 const MyOrdersPage = () => {
-    const [orders , setOrders]=useState([])
     const navigate =useNavigate()
-
-    useEffect(()=>{
-        //Simulate fetching orders
-        setTimeout(()=>{
-            const mokeOrders=[
-                {
-                    _id:"1122",
-                    createdAt:new Date(),
-                    shippingAddress:{city:"New Delhi",country:"INDIA"},
-                    orderItems:[
-                        {
-                            name:"Product1",
-                            image:"https://picsum.photos/500/500?random=1"
-                        },
-                    ],
-                    totalPrice:100,
-                    isPaid:false,
-
-                },
-                {
-                    _id:"1156",
-                    createdAt:new Date(),
-                    shippingAddress:{city:"New Delhi",country:"INDIA"},
-                    orderItems:[
-                        {
-                            name:"Product1",
-                            image:"https://picsum.photos/500/500?random=2"
-                        },
-                    ],
-                    totalPrice:100,
-                    isPaid:true,
-
-                }
-            ];
-            setOrders(mokeOrders)
-        },1000)
-    },[])
+    const dispatch = useDispatch();
+    const {orders , loading , error}=useSelector((state)=>state.orders);
+useEffect(()=>{
+    dispatch(fetchUserOrders())
+},[dispatch])
+  
     const handleRawClick=(id)=>{
-            navigate(`/order/${id}`)
+            navigate(`/order/${id}`) 
     }
+    if(loading) return <p>Loading...</p>
+    if(error)return <p>Error:{error}</p>
   return (
     <div className='max-w-7xl mx-auto p-4 sm:p-6'>
         <h2 className='text-xl sm:text-2xl font-bold mb-6'>My Order</h2>
@@ -62,7 +35,7 @@ const MyOrdersPage = () => {
                 </thead>
                 <tbody>
                     {
-                        orders.length>0?(
+                        orders?.length>0?(
                             orders.map((order)=>(
                                 <tr 
                                 key={order._id} 
@@ -70,8 +43,19 @@ const MyOrdersPage = () => {
                                 className='border-b hover:border-gray-100 cursor-pointer'
                                 >
                                     <td className='py-2 px-2 sm:py-4 sm:px-4'>
-                                        <img src={order.orderItems[0].image} alt={order.orderItems[0].name} className='w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg' />
-                                    </td>
+  {
+    order.orderItems?.length > 0 ? (
+      <img
+        src={order.orderItems[0].image}
+        alt={order.orderItems[0].name}
+        className='w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg'
+      />
+    ) : (
+      <span className='text-sm text-gray-400'>No Image</span>
+    )
+  }
+</td>
+
                                     <td className='py-2 px-2 sm:py-4 sm:px-4 font-medium text-gray-900 whitespace-nowrap'>#{order._id}</td>
                                     <td className='py-2 px-2 sm:py-4 sm:px-4'>
                                         {new Date(order.createdAt).toLocaleDateString()}{" "}

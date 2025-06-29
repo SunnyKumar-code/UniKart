@@ -27,7 +27,7 @@ const RazorpayButton = ({ amount, onSuccess, onError }) => {
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_ID, 
-      amount: amount * 100, 
+      amount: parseFloat(amount * 100).toFixed(2), 
       currency: 'INR',
       name: 'Your Company Name',
       description: 'Test Transaction',
