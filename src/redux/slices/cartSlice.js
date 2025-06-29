@@ -49,7 +49,7 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ productId, 
 
 // Update the quantity of an item move From Cart in the cart
 
-export const updateCartItemQuantity = createAsyncThunk("cart/updateCartItemQuantity", async ({ productId, quantity, size, color, guestId, userId }, { rejectWithValue }) => {
+export const updateCartItemQuantity = createAsyncThunk("cart/updateCartItemQuantity", async ({ productId, quantity, guestId, userId, size, color }, { rejectWithValue }) => {
     try {
         const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/cart`, {
             productId,
@@ -68,18 +68,20 @@ export const updateCartItemQuantity = createAsyncThunk("cart/updateCartItemQuant
 })
 
 // Remove an item from the cart 
-export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ productId, size, color, guestId, userId }, { rejectWithValue }) => {
+export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ productId, guestId, userId, size, color }, { rejectWithValue }) => {
     try {
-        const response = await axios({
-            method: "DELETE",
-            url: `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
-            data: { productId, size, color, guestId, userId }
+        const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/cart`, {
+            data: { productId, size, color, guestId, userId },
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
+
         return response.data
 
     } catch (error) {
 
-        return rejectWithValue(error.response.data)
+           return rejectWithValue(error.response?.data || error.message);
     }
 })
 
@@ -124,7 +126,7 @@ const cartSlice = createSlice({
             })
             .addCase(fetchCart.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.cart = action.payload;
                 saveCartToStorage(action.payload)
             })
             .addCase(fetchCart.rejected, (state, action) => {
@@ -137,7 +139,7 @@ const cartSlice = createSlice({
             })
             .addCase(addToCart.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.cart = action.payload;
                 saveCartToStorage(action.payload)
             })
             .addCase(addToCart.rejected, (state, action) => {
@@ -150,8 +152,8 @@ const cartSlice = createSlice({
             })
             .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
-                saveCartToStorage(action.payload)
+                state.cart = action.payload;
+                saveCartToStorage(state.payload)
             })
             .addCase(updateCartItemQuantity.rejected, (state, action) => {
                 state.loading = false;
@@ -163,7 +165,7 @@ const cartSlice = createSlice({
             })
             .addCase(removeFromCart.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.cart = action.payload;
                 saveCartToStorage(action.payload)
             })
             .addCase(removeFromCart.rejected, (state, action) => {
@@ -176,7 +178,7 @@ const cartSlice = createSlice({
             })
             .addCase(mergeCart.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.cart = action.payload;
                 saveCartToStorage(action.payload)
             })
             .addCase(mergeCart.rejected, (state, action) => {
@@ -185,5 +187,5 @@ const cartSlice = createSlice({
             })
     }
 })
-export const {clearCart} = cartSlice.actions;
+export const { clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
