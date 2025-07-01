@@ -88,7 +88,7 @@ const OrderDetailsPage = () => {
             </table>
           </div>
           {/*Back to Order Link */}
-          <Link to="/my-orders" className='text-blue-500 hover underline'>Back To My Orders</Link>
+          <Link to="/my-order" className='text-blue-500 hover underline'>Back To My Orders</Link>
 
 
         </div>
